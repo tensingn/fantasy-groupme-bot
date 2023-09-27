@@ -1,0 +1,29 @@
+{
+  "name": "fantasy-groupme-bot",
+  "version": "1.0.0",
+  "description": "bot for my fantasy football league's groupme chat",
+  "main": "index.ts",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx tsc; node ./index.js",
+    "build": "npx tsc;"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tensingn/fantasy-groupme-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tensingn/fantasy-groupme-bot/issues"
+  },
+  "homepage": "https://github.com/tensingn/fantasy-groupme-bot#readme",
+  "dependencies": {
+    "@google-cloud/firestore": "^6.7.0",
+    "axios": "^1.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
