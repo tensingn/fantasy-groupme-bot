@@ -1,20 +1,22 @@
 import { TeamDataModel } from "../data/models/team.data.model";
 import { DataService } from "../data/services/data.service";
+import { ChatService } from "../groupme/chat.service";
 import { Matchup } from "../sleeper/models/matchup.model";
 import { Players } from "../sleeper/models/players.model";
 import { Roster } from "../sleeper/models/roster.model";
 import { TeamWeek } from "../sleeper/models/team-week.model";
-import { User } from "../sleeper/models/user.model";
 import { SleeperService } from "../sleeper/services/sleeper.service";
 
 export class Bot {
 	private sleeperService: SleeperService;
 	private dataService: DataService;
+	private chatService: ChatService;
 	private readonly dursoId: string = "385344449577971712";
 
 	constructor() {
 		this.sleeperService = new SleeperService();
 		this.dataService = new DataService();
+		this.chatService = new ChatService();
 	}
 
 	async runWeek() {
@@ -46,6 +48,9 @@ export class Bot {
 		const dursoLoss = dursoTeamWeek.points < otherTeamWeek.points;
 
 		// if loss, send message (eventually from ai chatbot)
+		if (dursoLoss) {
+			this.chatService.sendMessage("durso lost1");
+		}
 	}
 
 	async runGetPlayers() {
