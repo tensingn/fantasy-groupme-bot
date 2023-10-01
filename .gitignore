@@ -132,3 +132,4 @@ dist
 *.js
 *.js.map
 *key.json
+*key.txt

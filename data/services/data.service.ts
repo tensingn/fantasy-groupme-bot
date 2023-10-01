@@ -85,6 +85,17 @@ export class DataService {
 		return teamDataModel;
 	}
 
+	async getTeamByRosterId(id: number): Promise<TeamDataModel> {
+		const teamData = (
+			await this.getByProperty<TeamDataModel>(this.TEAMS, {
+				key: "rosterId",
+				value: id,
+			})
+		)[0];
+		const teamDataModel = Object.assign(new TeamDataModel(), teamData);
+		return teamDataModel;
+	}
+
 	private async batchUpdate(
 		collectionName: string,
 		updateEntities: Array<UpdateEntity>
@@ -109,6 +120,18 @@ export class DataService {
 		const docRef = this.db.collection(collectionName).doc(id);
 		const obj: T = (await docRef.get()).data() as T;
 		return obj;
+	}
+
+	private async getByProperty<T extends DataModel>(
+		collectionName: string,
+		property: { key: string; value: any }
+	): Promise<T[]> {
+		const docRef = this.db
+			.collection(collectionName)
+			.where(property.key, "==", property.value);
+		const docs = (await docRef.get()).docs;
+		const values = docs.map((doc) => doc.data() as T);
+		return values;
 	}
 
 	private async batchAddReadFirst(

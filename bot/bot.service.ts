@@ -1,5 +1,6 @@
 import { TeamDataModel } from "../data/models/team.data.model";
 import { DataService } from "../data/services/data.service";
+import { GPTService } from "../gpt/gpt.service";
 import { ChatService } from "../groupme/chat.service";
 import { Matchup } from "../sleeper/models/matchup.model";
 import { Players } from "../sleeper/models/players.model";
@@ -11,12 +12,16 @@ export class Bot {
 	private sleeperService: SleeperService;
 	private dataService: DataService;
 	private chatService: ChatService;
+	private gptService: GPTService;
 	private readonly dursoId: string = "385344449577971712";
+	private readonly prompt: string =
+		"I am in a fantasy football league. TeamA lost last week's matchup against TeamB. Write a snarky click-bait sounding headline about TeamA losing to TeamB.";
 
 	constructor() {
 		this.sleeperService = new SleeperService();
 		this.dataService = new DataService();
 		this.chatService = new ChatService();
+		this.gptService = new GPTService();
 	}
 
 	async runWeek() {
@@ -24,7 +29,7 @@ export class Bot {
 		const week = (await this.getCurrentWeek()) - 1;
 
 		// get durso team
-		const durso = await this.getTeam(this.dursoId);
+		const durso = await this.getTeamByOwnerId(this.dursoId);
 
 		// get matchhups from sleeper
 		const matchups = await this.getMatchupsByWeek(week);
@@ -49,7 +54,17 @@ export class Bot {
 
 		// if loss, send message (eventually from ai chatbot)
 		if (dursoLoss) {
-			this.chatService.sendMessage("durso lost1");
+			// get other team
+			const otherTeam = await this.getTeamByRosterId(
+				otherTeamWeek.roster_id
+			);
+
+			const prompt = this.prompt
+				.replaceAll("TeamA", durso.displayName)
+				.replaceAll("TeamB", otherTeam.displayName);
+
+			const message = await this.gptService.getResponse(this.prompt);
+			this.chatService.sendMessage(message ?? "durs lost this week!");
 		}
 	}
 
@@ -91,7 +106,11 @@ export class Bot {
 		this.dataService.updateRosters(rosters);
 	}
 
-	private async getTeam(id: string): Promise<TeamDataModel> {
+	private async getTeamByOwnerId(id: string): Promise<TeamDataModel> {
 		return await this.dataService.getTeam(id);
+	}
+
+	private async getTeamByRosterId(id: number): Promise<TeamDataModel> {
+		return await this.dataService.getTeamByRosterId(id);
 	}
 }
