@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx tsc; node ./index.js",
-    "build": "npx tsc;"
+    "build": "npm run lint && tsc;"
   },
   "repository": {
     "type": "git",
