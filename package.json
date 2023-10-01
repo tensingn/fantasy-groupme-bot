@@ -21,6 +21,7 @@
   "homepage": "https://github.com/tensingn/fantasy-groupme-bot#readme",
   "dependencies": {
     "@google-cloud/firestore": "^6.7.0",
+    "@google-cloud/functions-framework": "^3.3.0",
     "axios": "^1.5.0",
     "openai": "^4.11.0"
   },
