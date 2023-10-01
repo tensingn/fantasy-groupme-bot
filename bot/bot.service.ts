@@ -63,8 +63,10 @@ export class Bot {
 				.replaceAll("TeamA", durso.displayName)
 				.replaceAll("TeamB", otherTeam.displayName);
 
-			const message = await this.gptService.getResponse(this.prompt);
-			this.chatService.sendMessage(message ?? "durs lost this week!");
+			console.log(prompt);
+
+			// const message = await this.gptService.getResponse(this.prompt);
+			// this.chatService.sendMessage(message ?? "durs lost this week!");
 		}
 	}
 
