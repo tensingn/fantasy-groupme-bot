@@ -7,8 +7,11 @@ import { Bot } from "./bot/bot.service";
  * @param {!Object} event Event payload.
  * @param {!Object} context Metadata for the event.
  */
-exports.runBot = async (event: CloudEvent<string>, context: Context) => {
+exports.runBot = async (event: any, context: Context) => {
 	const dickBotkus = new Bot();
-	console.log(event.data);
-	dickBotkus.runWeek(event.data ?? "");
+	const teamId = event.data
+		? Buffer.from(event.data, "base64").toString()
+		: "World";
+	console.log(teamId);
+	dickBotkus.runWeek(teamId ?? "");
 };
