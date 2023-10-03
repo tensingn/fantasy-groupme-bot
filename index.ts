@@ -9,5 +9,6 @@ import { Bot } from "./bot/bot.service";
  */
 exports.runBot = async (event: CloudEvent<string>, context: Context) => {
 	const dickBotkus = new Bot();
+	console.log(event.data);
 	dickBotkus.runWeek(event.data ?? "");
 };
