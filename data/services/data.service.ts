@@ -15,6 +15,7 @@ export class DataService {
 	constructor() {
 		this.db = new Firestore({
 			projectId: "nicks-fun-random-projects",
+			keyFilename: "./key.json",
 			ignoreUndefinedProperties: true,
 		});
 	}

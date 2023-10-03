@@ -6,6 +6,7 @@ export class SecretService {
 	constructor() {
 		this.client = new SecretManagerServiceClient({
 			projectId: "nicks-fun-random-projects",
+			keyFilename: "./key.json",
 		});
 	}
 
