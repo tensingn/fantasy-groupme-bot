@@ -66,7 +66,9 @@ export class Bot {
 				.replaceAll("TeamB", otherTeam.displayName);
 
 			const message = await this.gptService.getResponse(prompt);
-			this.chatService.sendMessage(message ?? "durs lost this week!");
+			this.chatService.sendMessage(
+				message ?? `${loser.displayName} lost this week!`
+			);
 		}
 	}
 
