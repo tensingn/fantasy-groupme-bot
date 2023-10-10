@@ -2,8 +2,6 @@ import { Firestore } from "@google-cloud/firestore";
 import { Player } from "../../sleeper/models/player.model";
 import { PlayerDataModel } from "../models/player.data.model";
 import { DataModel } from "../models/data-model.model";
-import { User } from "../../sleeper/models/user.model";
-import { UserDataModel } from "../models/user.data.model";
 import { Roster } from "../../sleeper/models/roster.model";
 import { TeamDataModel } from "../models/team.data.model";
 
@@ -17,7 +15,6 @@ export class DataService {
 	constructor() {
 		this.db = new Firestore({
 			projectId: "nicks-fun-random-projects",
-			keyFilename: "./key.json",
 			ignoreUndefinedProperties: true,
 		});
 	}

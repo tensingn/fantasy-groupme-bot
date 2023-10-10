@@ -1,13 +1,18 @@
 import axios from "axios";
+import { SecretService } from "../gcp/secret.service";
 
 export class ChatService {
-	private id: string = "the groupme bot id";
 	private url: string = "https://api.groupme.com/v3/bots/post";
+	private readonly secretService: SecretService;
+
+	constructor() {
+		this.secretService = new SecretService();
+	}
 
 	async sendMessage(message: string) {
 		await axios
 			.post(this.url, {
-				bot_id: this.id,
+				bot_id: await this.secretService.getSecret("groupmebot-id"),
 				text: message,
 			})
 			.catch((err) => {

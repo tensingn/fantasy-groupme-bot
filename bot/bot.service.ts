@@ -13,7 +13,7 @@ export class Bot {
 	private dataService: DataService;
 	private chatService: ChatService;
 	private gptService: GPTService;
-	private readonly dursoId: string = "385344449577971712";
+	private loserId: string;
 	private readonly prompt: string =
 		"I am in a fantasy football league. TeamA lost last week's matchup against TeamB. Write a snarky click-bait sounding headline about TeamA losing to TeamB.";
 
@@ -24,47 +24,51 @@ export class Bot {
 		this.gptService = new GPTService();
 	}
 
-	async runWeek() {
+	async runWeek(loserId: string) {
+		this.loserId = loserId;
+
 		// get current week
 		const week = (await this.getCurrentWeek()) - 1;
 
-		// get durso team
-		const durso = await this.getTeamByOwnerId(this.dursoId);
+		// get loser team
+		const loser = await this.getTeamByOwnerId(this.loserId);
 
 		// get matchhups from sleeper
 		const matchups = await this.getMatchupsByWeek(week);
 
 		// store matchup results
 
-		// find durso matchup
-		const dursoMatchup = matchups.find((matchup) =>
+		// find loser matchup
+		const loserMatchup = matchups.find((matchup) =>
 			matchup.teamWeeks.some(
-				(teamWeek) => teamWeek.roster_id === durso.rosterId
+				(teamWeek) => teamWeek.roster_id === loser.rosterId
 			)
 		);
 
-		// determine duro win/loss
-		const dursoTeamWeek: TeamWeek = dursoMatchup?.teamWeeks.find(
-			(teamWeek) => teamWeek.roster_id === durso.rosterId
+		// determine win/loss
+		const loserTeamWeek: TeamWeek = loserMatchup?.teamWeeks.find(
+			(teamWeek) => teamWeek.roster_id === loser.rosterId
 		)!;
-		const otherTeamWeek: TeamWeek = dursoMatchup?.teamWeeks.find(
-			(teamWeek) => teamWeek.roster_id != durso.rosterId
+		const otherTeamWeek: TeamWeek = loserMatchup?.teamWeeks.find(
+			(teamWeek) => teamWeek.roster_id != loser.rosterId
 		)!;
-		const dursoLoss = dursoTeamWeek.points < otherTeamWeek.points;
+		const loserLoss = loserTeamWeek.points < otherTeamWeek.points;
 
 		// if loss, send message (eventually from ai chatbot)
-		if (dursoLoss) {
+		if (loserLoss) {
 			// get other team
 			const otherTeam = await this.getTeamByRosterId(
 				otherTeamWeek.roster_id
 			);
 
 			const prompt = this.prompt
-				.replaceAll("TeamA", durso.displayName)
+				.replaceAll("TeamA", loser.displayName)
 				.replaceAll("TeamB", otherTeam.displayName);
 
-			const message = await this.gptService.getResponse(this.prompt);
-			this.chatService.sendMessage(message ?? "durs lost this week!");
+			const message = await this.gptService.getResponse(prompt);
+			this.chatService.sendMessage(
+				message ?? `${loser.displayName} lost this week!`
+			);
 		}
 	}
 

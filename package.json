@@ -2,12 +2,13 @@
   "name": "fantasy-groupme-bot",
   "version": "1.0.0",
   "description": "bot for my fantasy football league's groupme chat",
-  "main": "index.ts",
+  "main": "index.js",
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx tsc; node ./index.js",
-    "build": "npx tsc;"
+    "gcp-build": "npm run build",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   "homepage": "https://github.com/tensingn/fantasy-groupme-bot#readme",
   "dependencies": {
     "@google-cloud/firestore": "^6.7.0",
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@google-cloud/secret-manager": "^5.0.1",
     "axios": "^1.5.0",
     "openai": "^4.11.0"
   },
